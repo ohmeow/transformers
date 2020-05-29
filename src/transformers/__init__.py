@@ -19,19 +19,6 @@ else:
 
 import logging
 
-# Benchmarking
-from .benchmark_utils import (
-    Frame,
-    Memory,
-    MemoryState,
-    MemorySummary,
-    MemoryTrace,
-    UsedMemoryState,
-    bytes_to_human_readable,
-    start_memory_tracing,
-    stop_memory_tracing,
-)
-
 # Configurations
 from .configuration_albert import ALBERT_PRETRAINED_CONFIG_ARCHIVE_MAP, AlbertConfig
 from .configuration_auto import ALL_PRETRAINED_CONFIG_ARCHIVE_MAP, CONFIG_MAPPING, AutoConfig
@@ -139,7 +126,7 @@ from .tokenization_distilbert import DistilBertTokenizer, DistilBertTokenizerFas
 from .tokenization_electra import ElectraTokenizer, ElectraTokenizerFast
 from .tokenization_flaubert import FlaubertTokenizer
 from .tokenization_gpt2 import GPT2Tokenizer, GPT2TokenizerFast
-from .tokenization_longformer import LongformerTokenizer
+from .tokenization_longformer import LongformerTokenizer, LongformerTokenizerFast
 from .tokenization_openai import OpenAIGPTTokenizer, OpenAIGPTTokenizerFast
 from .tokenization_reformer import ReformerTokenizer
 from .tokenization_roberta import RobertaTokenizer, RobertaTokenizerFast
@@ -335,7 +322,15 @@ if is_torch_available():
         REFORMER_PRETRAINED_MODEL_ARCHIVE_MAP,
     )
 
-    from .modeling_longformer import LONGFORMER_PRETRAINED_MODEL_ARCHIVE_MAP, LongformerModel, LongformerForMaskedLM
+    from .modeling_longformer import (
+        LongformerModel,
+        LongformerForMaskedLM,
+        LongformerForSequenceClassification,
+        LongformerForMultipleChoice,
+        LongformerForTokenClassification,
+        LongformerForQuestionAnswering,
+        LONGFORMER_PRETRAINED_MODEL_ARCHIVE_MAP,
+    )
 
     # Optimization
     from .optimization import (
@@ -351,6 +346,9 @@ if is_torch_available():
     from .trainer import Trainer, set_seed, torch_distributed_zero_first, EvalPrediction
     from .data.data_collator import DefaultDataCollator, DataCollator, DataCollatorForLanguageModeling
     from .data.datasets import GlueDataset, TextDataset, LineByLineTextDataset, GlueDataTrainingArguments
+
+    # Benchmarks
+    from .benchmark import PyTorchBenchmark, PyTorchBenchmarkArguments
 
 # TensorFlow
 if is_tf_available():

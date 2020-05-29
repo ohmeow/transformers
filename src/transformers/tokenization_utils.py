@@ -503,6 +503,7 @@ class SpecialTokensMixin:
             if key in self.SPECIAL_TOKENS_ATTRIBUTES:
                 if key == "additional_special_tokens":
                     assert isinstance(value, (list, tuple)) and all(isinstance(t, str) for t in value)
+                    setattr(self, key, value)
                 elif isinstance(value, AddedTokenFast):
                     setattr(self, key, str(value))
                 elif isinstance(value, str):
@@ -2399,15 +2400,20 @@ class PreTrainedTokenizerFast(PreTrainedTokenizer):
 
     def add_special_tokens(self, special_tokens_dict: dict) -> int:
         # Map special tokens to class attributes (self.pad_token...)
-        num_added_tokens = super().add_special_tokens(special_tokens_dict)
+        super().add_special_tokens(special_tokens_dict)
 
         # If the backend tokenizer the only specificities of special tokens are that
         #    - they will never be processed by the model, and
         #    - they will be removed while decoding.
         # But they are not mapped to special attributes in the backend so we can just
         # send a list.
-        tokens = flatten(special_tokens_dict.values())
-        self._tokenizer.add_special_tokens(tokens)
+        tokens = []
+        for token in special_tokens_dict.values():
+            if isinstance(token, list):
+                tokens += token
+            else:
+                tokens += [token]
+        num_added_tokens = self._tokenizer.add_special_tokens(tokens)
 
         return num_added_tokens
 
